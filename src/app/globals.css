@@ -1,0 +1,480 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #111111;
+  --lime: #d9ff43;
+  --paper: #f3f0e9;
+  --signal: #ff5a36;
+  --signal-strong: #b3260b; /* signal tone dark enough for text on paper */
+  --muted: #8c8c8c;
+  --muted-strong: #5c5a55;
+  --surface: #1b1b1b;
+  --line: #333333;
+
+  --header-h: 3.5rem;
+  --gutter: clamp(1rem, 2.6vw, 2.5rem);
+  --column-gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  --section-y: clamp(5rem, 11vw, 10rem);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-lime: var(--lime);
+  --color-paper: var(--paper);
+  --color-signal: var(--signal);
+  --color-signal-strong: var(--signal-strong);
+  --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --ease-editorial: var(--ease-out);
+}
+
+/* Surfaces own background, text, muted text and focus colour so components never guess contrast. */
+@utility surface-ink {
+  background-color: var(--ink);
+  color: var(--paper);
+  --tone-muted: var(--muted);
+  --tone-rule: var(--line);
+  --focus: var(--lime);
+}
+
+@utility surface-paper {
+  background-color: var(--paper);
+  color: var(--ink);
+  --tone-muted: var(--muted-strong);
+  --tone-rule: var(--ink);
+  --focus: var(--ink);
+}
+
+@utility surface-lime {
+  background-color: var(--lime);
+  color: var(--ink);
+  --tone-muted: #3d4416;
+  --tone-rule: var(--ink);
+  --focus: var(--ink);
+}
+
+@utility text-tone-muted {
+  color: var(--tone-muted);
+}
+
+@utility border-tone {
+  border-color: var(--tone-rule);
+}
+
+@utility container-editorial {
+  width: 100%;
+  max-width: 110rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* 4 columns on phones, 8 on tablets, 12 from laptop up. */
+@utility grid-editorial {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--column-gap);
+
+  @media (width >= 48rem) {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  @media (width >= 64rem) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+@utility text-display-xxl {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.75rem, 15vw, 16.5rem);
+  line-height: 0.84;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+}
+
+@utility text-display-xl {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.75rem, 10.5vw, 11.5rem);
+  line-height: 0.86;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+@utility text-display-lg {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.25rem, 7vw, 7.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+@utility text-display-md {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.875rem, 4.4vw, 4.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+@utility text-display-sm {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.375rem, 2.3vw, 2.25rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+@utility text-statement {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 2.9vw, 2.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: pretty;
+}
+
+@utility text-lede {
+  font-family: var(--font-sans);
+  font-size: clamp(1.125rem, 1.45vw, 1.4rem);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+@utility text-body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+@utility text-meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@layer base {
+  html {
+    background-color: var(--ink);
+    /* Locking scroll for the menu then removes no scrollbar, so the page neither reflows nor jumps. */
+    scrollbar-gutter: stable;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    overflow-x: clip;
+    font-feature-settings: "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html.is-scroll-locked {
+    overflow: hidden;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus, var(--lime));
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--lime);
+    color: var(--ink);
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--lime);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+  outline-color: var(--ink);
+}
+
+/* Native <dialog> gives Escape handling, an inert background and top-layer stacking for free. */
+.menu-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: transparent;
+}
+
+/* The panel inside paints the background so the open animation can wipe it in. */
+.menu-dialog::backdrop {
+  background: transparent;
+}
+
+/* Softens the render edges; pair with mix-blend-lighten so the near-black backdrop resolves to ink. */
+.mask-feather {
+  mask-image: radial-gradient(ellipse 66% 58% at 50% 46%, #000 60%, transparent 100%);
+}
+
+/* ---------- Motion (Phase 03) ---------- */
+
+/*
+ * Homepage entrance, about 2.3s, started by the inline script in the root layout on a full load of
+ * the homepage. Pure CSS so it begins on the first frame: the sculpture is painted (dimmed) from the
+ * start, which keeps it the LCP element, and the type never waits for JavaScript. Without the flag
+ * (JS off, reduced motion, client-side visits) the hero simply renders in its final state.
+ */
+html[data-intro="play"] [data-scroll-section="hero"] [data-grid-line] {
+  transform-origin: 50% 0%;
+  animation: intro-grid 1.3s var(--ease-in-out) both;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+
+html[data-intro="play"] [data-intro="title"] [data-line-mask] {
+  overflow: clip;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+html[data-intro="play"] [data-intro="title"] [data-line] {
+  animation: intro-line 1s var(--ease-expo) 0.1s both;
+}
+
+/* The second line travels further and tilts in: the stronger beat of the two. */
+html[data-intro="play"] [data-intro="title"] [data-line-mask]:nth-of-type(2) [data-line] {
+  transform-origin: 0% 100%;
+  animation: intro-line-strong 1.15s var(--ease-expo) 0.26s both;
+}
+
+html[data-intro="play"] [data-intro="rule"] {
+  transform-origin: 0% 50%;
+  animation: intro-rule 0.85s var(--ease-in-out) 0.78s both;
+}
+
+html[data-intro="play"] [data-intro="media"] img {
+  animation: intro-light 1.4s var(--ease-soft) 0.85s both;
+}
+
+html[data-intro="play"] [data-intro^="meta"] {
+  animation: intro-meta 0.6s var(--ease-soft) 1.55s both;
+}
+
+html[data-intro="play"] [data-intro="meta-2"] {
+  animation-delay: 1.63s;
+}
+
+html[data-intro="play"] [data-intro="meta-3"] {
+  animation-delay: 1.71s;
+}
+
+@keyframes intro-grid {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes intro-line {
+  from {
+    transform: translateY(108%);
+  }
+}
+
+@keyframes intro-line-strong {
+  from {
+    transform: translateY(118%) rotate(2.5deg);
+  }
+}
+
+@keyframes intro-rule {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes intro-light {
+  from {
+    filter: brightness(0.3);
+    transform: scale(1.06);
+  }
+}
+
+@keyframes intro-meta {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.page-wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+}
+
+.page-wipe__layer {
+  position: absolute;
+  inset: 0;
+  transform: scaleY(0);
+}
+
+.custom-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+}
+
+.custom-cursor__dot,
+.custom-cursor__label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform;
+}
+
+.custom-cursor__dot {
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: var(--paper);
+  mix-blend-mode: difference;
+}
+
+/* Offset below-right of the pointer so the label never covers what is being pointed at. */
+.custom-cursor__label {
+  margin: 16px 0 0 16px;
+  padding: 0.45rem 0.7rem;
+  background: var(--lime);
+  color: var(--ink);
+  white-space: nowrap;
+  transform-origin: 0 0;
+}
+
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none;
+}
+
+/* Form fields and modal dialogs (which sit in the top layer, above the custom cursor) keep the native cursor. */
+html.has-custom-cursor :is(input, textarea, select, [contenteditable]),
+html.has-custom-cursor:has(dialog[open]),
+html.has-custom-cursor:has(dialog[open]) * {
+  cursor: auto;
+}
+
+html:has(dialog[open]) .custom-cursor {
+  display: none;
+}
+
+/* Horizontal Work gallery, switched on by WorkGalleryMotion on desktop only. */
+[data-gallery-mode="horizontal"] {
+  display: flex;
+  height: 100svh;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  /* clip, not hidden: a hidden box can still be scrolled by focus, which would fight the track transform. */
+  overflow: clip;
+  padding-top: calc(var(--header-h) + 1.5rem);
+  padding-bottom: 2rem;
+  user-select: none;
+}
+
+[data-gallery-mode="horizontal"][data-dragging],
+[data-gallery-mode="horizontal"][data-dragging] * {
+  cursor: grabbing;
+}
+
+[data-gallery-mode="horizontal"] [data-gallery-track] {
+  display: flex;
+  width: max-content;
+  max-width: none;
+  align-items: flex-start;
+  gap: clamp(3rem, 6vw, 7rem);
+  margin: 0;
+  padding-inline: var(--gutter);
+  will-change: transform;
+}
+
+[data-gallery-mode="horizontal"] [data-gallery-panel] {
+  display: flex;
+  width: clamp(22rem, calc((100svh - var(--header-h) - 20rem) * 1.5), 72vw);
+  flex: none;
+  flex-direction: column;
+  gap: 1.75rem;
+  margin: 0;
+}
+
+[data-gallery-mode="horizontal"] [data-gallery-media] {
+  order: -1;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+}
+
+[data-gallery-mode="horizontal"] [data-gallery-meta] {
+  display: grid;
+  width: 100%;
+  max-width: none;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2rem;
+}
+
+[data-gallery-mode="horizontal"] [data-gallery-meta] h2 {
+  font-size: clamp(1.75rem, 3vw, 3.25rem);
+}
+
+[data-gallery-mode="horizontal"] [data-gallery-hud] {
+  display: flex;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
